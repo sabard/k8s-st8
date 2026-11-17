@@ -1,0 +1,31 @@
+version: 1
+name: payments-upgrade
+steps:
+  - id: chart
+    command: set
+    target: helm/production/payments
+    value:
+      chart: payments
+      version: 4.2.1
+      values:
+        replicas: 3
+    recovery: compensatable
+    impact: [workload, configuration]
+
+  - id: migration
+    command: action
+    target: Run payments migration 2026-11-17-expand.sql
+    depends_on: [chart]
+    recovery: irreversible
+    impact: [persistent_data]
+    snapshot: Verified payments database backup taken before migration
+
+  - id: traffic
+    command: set
+    target: traffic/production/payments
+    value:
+      version: v4
+      weight_percent: 10
+    depends_on: [migration]
+    recovery: compensatable
+    impact: [traffic]

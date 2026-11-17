@@ -1,0 +1,11 @@
+version: 1
+name: kind-install
+steps:
+  - id: install-chart
+    command: set
+    target: helm/default/st8-demo
+    value:
+      chart: examples/kind/chart
+      version: 0.1.0
+    recovery: compensatable
+    impact: [workload, configuration]

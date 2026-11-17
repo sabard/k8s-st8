@@ -1,0 +1,9 @@
+version: 1
+name: kind-destructive-change
+steps:
+  - id: erase-message
+    command: delete
+    target: config/default/st8-demo-config/message
+    recovery: irreversible
+    impact: [configuration]
+    snapshot: Save the ConfigMap JSON outside the cluster and verify its data before deleting the message

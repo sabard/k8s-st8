@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: st8-demo
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: st8-demo
+  template:
+    metadata:
+      labels:
+        app: st8-demo
+    spec:
+      containers:
+        - name: nginx
+          image: {{ .Values.image | quote }}
+          ports:
+            - containerPort: 80

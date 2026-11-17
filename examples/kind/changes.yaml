@@ -1,0 +1,16 @@
+version: 1
+name: kind-reversible-changes
+steps:
+  - id: update-message
+    command: set
+    target: config/default/st8-demo-config/message
+    value: "goodbye from st8"
+    recovery: reversible
+    impact: [configuration]
+  - id: scale-up
+    command: set
+    target: deployment/default/st8-demo/replicas
+    value: 2
+    depends_on: [update-message]
+    recovery: compensatable
+    impact: [workload]
